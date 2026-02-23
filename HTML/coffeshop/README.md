@@ -1,0 +1,1 @@
+The Coffee_shop.html file is a themed business website designed for a cozy café. It utilizes custom serif typography and a warm, earthy color palette to create an inviting user experience. Structurally, it relies on HTML tables to neatly organize a menu of coffees, teas, and pastries, complete with interactive hover states on navigation links and call-to-action buttons.
