@@ -1,0 +1,1 @@
+The Portfolio.html file serves as a personal professional landing page. It highlights academic background details and includes a stylized, circular profile image with a direct link to LinkedIn. Additionally, it demonstrates seamless multimedia integration by embedding native HTML5 video and audio players directly into the page structure.
