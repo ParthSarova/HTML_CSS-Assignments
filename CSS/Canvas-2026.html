@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>2026 Blue Glass Canvas</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background:
+      radial-gradient(circle at top right, rgba(120,180,255,0.25), transparent 50%),
+      linear-gradient(135deg, #081A2B, #020B14);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  canvas {
+    box-shadow: 0 20px 45px rgba(120,180,255,0.35);
+    border-radius: 20px;
+  }
+</style>
+</head>
+
+<body>
+
+<canvas id="canvas" width="900" height="350"></canvas>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+let textY = 180;
+let direction = 1;
+
+/* ===== Glass Bubbles ===== */
+const bubbles = Array.from({ length: 10 }, () => ({
+  x: Math.random() * canvas.width,
+  y: canvas.height + Math.random() * 200,
+  r: Math.random() * 22 + 18,
+  speed: Math.random() * 0.4 + 0.2
+}));
+
+/* ===== Background ===== */
+function drawBackground() {
+  // Base gradient
+  const g = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+  g.addColorStop(0, "#EAF6FF");
+  g.addColorStop(1, "#4F6F91");
+
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Radial light mix
+  const r = ctx.createRadialGradient(
+    canvas.width * 0.7,
+    canvas.height * 0.2,
+    0,
+    canvas.width * 0.7,
+    canvas.height * 0.2,
+    canvas.width * 0.8
+  );
+  r.addColorStop(0, "rgba(255,255,255,0.35)");
+  r.addColorStop(1, "rgba(255,255,255,0)");
+
+  ctx.fillStyle = r;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+/* ===== Text ===== */
+function drawText() {
+  ctx.textAlign = "center";
+  ctx.shadowColor = "rgba(0,0,0,0.35)";
+  ctx.shadowBlur = 14;
+
+  ctx.font = "700 20px 'Playfair Display'";
+  ctx.fillStyle = "#123A5F";
+  ctx.fillText(
+    "Long On Long On Long on, SURYAKUMAR YADAVVVV 😱",
+    canvas.width / 2,
+    textY
+  );
+
+  ctx.font = "300 18px 'Poppins'";
+  ctx.fillStyle = "#2F5D8A";
+  ctx.fillText("What a Catchhhhh", canvas.width / 2, textY + 42);
+
+  ctx.shadowBlur = 0;
+}
+
+/* ===== Bubble ===== */
+function drawBubble(b) {
+  ctx.beginPath();
+  ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(180,220,255,0.25)";
+  ctx.shadowBlur = 18;
+  ctx.shadowColor = "rgba(180,220,255,0.9)";
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // Highlight
+  ctx.beginPath();
+  ctx.arc(b.x - b.r / 3, b.y - b.r / 3, b.r / 3, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(220,240,255,0.65)";
+  ctx.fill();
+}
+
+/* ===== REAL GLASS LENS (NO OVERLAP) ===== */
+function magnifyTextUnderBubble(b) {
+  const scale = 1.35;
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+  ctx.clip();
+
+  // Clear normal text under bubble
+  ctx.clearRect(b.x - b.r - 5, b.y - b.r - 5, b.r * 2 + 10, b.r * 2 + 10);
+
+  // Scale text inside lens
+  ctx.translate(b.x, b.y);
+  ctx.scale(scale, scale);
+  ctx.translate(-b.x, -b.y);
+
+  drawText();
+  ctx.restore();
+}
+
+/* ===== Animation ===== */
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  drawBackground();
+  drawText();
+
+  bubbles.forEach(b => {
+    magnifyTextUnderBubble(b);
+    drawBubble(b);
+
+    b.y -= b.speed;
+    if (b.y < -50) {
+      b.y = canvas.height + 50;
+      b.x = Math.random() * canvas.width;
+    }
+  });
+
+  textY += 0.3 * direction;
+  if (textY > 185 || textY < 170) direction *= -1;
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+
+</body>
+</html>
